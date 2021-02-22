@@ -1,0 +1,21 @@
+在视觉图像领域损失函数
+1.常见的有逐像素对比，如：MSE， L1 loss， L1-smooth loss；
+
+2.图像的 Structural Similarity
+  在Image Quality Assessment: From Error Visibility to Structural Similarity中使用ESSIM作为损失函数
+  作者认为，传统的MSE损失函数不足以表达人的视觉系统对图片的直观感受，比如一幅图很模糊，而另外一幅只是亮度变为原来的0.9，
+  在计算损失的时候，模糊图片的损失可能很小。同时，作者认为，人类衡量两幅图的距离时，更偏向于两幅图的结构相似性，而不是逐
+  像素比较。
+  作者将两幅图的相似性按照：亮度，对比度，结构三个维度进行对比。详细计算过程见：http://www.tensorinfinity.com/paper_164.html
+  
+ 3.Perceptual Loss
+  风格迁移：提供一幅画，将任意一张照片转化成这个风格，并尽量保持原图的内容。
+  在 Perceptual Losses for Real-Time Style Transfer and Super-Resolution 中使用预训练模型来在图像变换任务中使用感知损失来
+  进行相似性度量的论文，这篇论文通过结合传统方法使用优化算法来进行感知度量的方法，利用神经网络模型浅层提取low-level信息，高层提
+  取high-level信息的特点，使用图像在预训练的模型中的高维信息来进行相似性度量，取得了很好的效果。
+  在图像变换任务中，都需要进行相似性的度量。一些典型图像变换任务有风格迁移，图像上色，超分辨率重建，图像降噪，当前的方法都是使用
+  的一些逐像素的损失函数。
+  https://zhuanlan.zhihu.com/p/74968562
+  
+  
+  
