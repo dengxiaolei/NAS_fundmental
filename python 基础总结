@@ -38,4 +38,20 @@ list 列表
     
    思维导图： https://zhuanlan.zhihu.com/p/28946989
     
-
+dict:
+  1.dict 中包括 key value
+    dict[key]
+    dict.get(key) return None 或者对应的value
+    if key in dict:
+    dict.keys()    返回所有的键值
+    dict.values()  返回所有的values
+    dict.clear()
+    dict.pop(key)
+    del dict[key]
+    del dict
+  2.字典遍历
+    for key in dict:
+    或者：
+    for key, value in dict.items():
+    https://zhuanlan.zhihu.com/p/29034557
+    
