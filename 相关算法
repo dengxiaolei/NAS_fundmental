@@ -12,10 +12,121 @@
     2.实现复杂、计算复杂度高的算法，有了落地的可能性
     3.提升个人工程能力，开拓视野
  
-##3.
+##3.常见计算框架 
+      原始框架        GPU代替包              支持GPU    C/C++核函数   表达式核函数    装饰器 python
+      CUDA            pyCUDA                 n卡        是            否             否
+      OpenCL          PyOpenCL               n卡+a卡    是            否             否
+      Numpy            Numba                 n卡+a卡    是            是             是 
+      Scipy            cupy                  n卡        是            是
+      pandas           cuDF&scikitcuda       n卡        无
+      scikit-learn     opencv-cuda           n卡        无
+
+##4.框架与技术支持
+    GPU替代包             支持数值计算接口      支持接口类型          应用领域
+    pyCUDA                    否               通用 底层             任意
+    PyOpenCL                  否               通用 底层             任意
+    Numba                     是               通用、高层+底层接口    数值计算
+    CuPy                      是               通用、高层+底层接口    数值计算
+    cuDF& Modin               是               通用、高级接口         数据分析、处理
+    cuML& scikit-cuda         是               无(自动)              数据分析、机器学习
+    OpenCV-CUDA               是               高级接口              视觉任务
+
+##5. GPU和CPU计算流程
+      初始化，并将待数据拷贝到GPU设备的显存上。
+      CPU调用GPU函数，启动GPU多个核心同时进行计算。
+      CPU与GPU异步计算。
+      将GPU计算结果拷贝回主机端，得到计算结果
+      
+##6.GPU和CPU通信
+   #CPU到GPU
+    # 1.copy host to device by numba
+    result_array = numba_arr.copy_to_host()
+    # 2.copy host to device by cupy
+    result_array = cp_arr1.get()
+    result_array = cp.asnumpy(cp_arr1)
+    # 3.copy host to device by opencv
+    op_arr = np_arr.download()
+    
+    #GPU到CPU
+    import numpy as np
+    from numba import cuda
+    import cupy
+    import cv2
+    np_arr = np.zeros((100, 100), np.float32)
+    # 1.copy host to device by numba
+    cuda.select_device(0)
+    numba_arr = cuda.to_device(arr)
+    cuda.close()
+    # 2.copy host to device by cupy
+    with cp.cuda.Device(0):
+        cp_arr1 = cupy.array(np_arr)
+        cp_arr2 = cupy.asarray(np_arr)
+    # 3.copy host to device by opencv
+    cv2.cuda.setDevice(0)
+    op_arr = cv2.cuda_gpuMat()
+    op_arr.upload(np_arr)
+    
+##7.GPU端计算
+     调用框架已定义的算子
+       框架                          子模块                      接口举例
+       数学计算                        无                        cupy.add
+                                                                cupy.substract
+       三角函数                        无                        cupy.sin
+                                                                cupy.cos
+     定制特定类型核函数
+     
+ ##8.定制原始核函数（线程索引和Numba计算）
+   numba示例：
+   from bynba import numba
+   def rotate_iou_gpu_eval( boxes, query_boxes, criterion=-1, device_id=0):
+       box_dtype = boxes.dtype
+       boxes = boxes.astype(np.float32)
+       query_boxes = query_boxes.astype(np.float32)
+       N = boxes.shape[0]
+       K = query_boxes.shape[0]
+       iou = np.zeros((N,k), dtype = np.float32)
+       if N == 0 or K == 0:
+          return iou
+       threadsPerBlock = 8*8
+       cuda.select_device(device_id)
+       blockspergrid = (div_up(N, threadsPerBlock), div_up(K, threadsPerBlock))
+       
+       stream = cuda.stream()
+       with stream.auto_synchronize():
+           boxes_dev = cuda.to_device(boxes.reshape([-1]),stream)
+           query_boxes_dev = cuda.to_device(query_boxes_dev.reshape([-1]),stream)
+           iou_dev = cuda.to_device(iou.reshape([-1]),sream)
+           rotate_iou_kernel_eval[blocksprgrid, threadsPerBlock, stream](N,K,boxes_dev, query_boxes_dev, iou_dev, criterion)
+           iou_dev.copy_to_host(iou.reshape([-1]),stream=stream)
+        return iou.astype(boxes.dtype)
+  
+  参考资料：
+        tfdlpack: https://github.com/VoVAllen/tf-dlpack
+        OpenCV-CUDA
+        1) 接口说明：https://docs.opencv.org/4.5.0/d8/d34/group__cudaarithm__elem.html
+        2) cv::cuda_GpuMat类说明：https://docs.opencv.org/master/d0/d60/classcv_1_1cuda_1_1GpuMat.html
+        Numba: 
+        1）课程：https://nyu-cds.github.io/python-numba
+        2）非极大值抑制：https://github.com/traveller59/second.pytorch/blob/3aba19c9688274f75ebb5e576f65cfe54773c021/second/core/non_max_suppression/nms_gpu.py#L605
+
+   
+   
+   
+   
+ 
+                                                                
+                                                                
+                                                                
+       
+     
 
 
 
 
+
+
+
+ 
+ 
 
 
