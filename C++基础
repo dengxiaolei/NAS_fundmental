@@ -1,0 +1,32 @@
+
+
+
+ ##C++设计中阶（主讲师应用分发事业部李青鑫）
+ 1.进程、线程、编程模式、网络、安全
+ 
+ top命令查看linux进程
+ 
+ 进程和程序之间的区别：程序是一个静态的指令序列、集合；进程是一个容器包含了执行一个程序的特定实例所用到的各种资源（栈，堆等）；
+ 进程的特点：1.可执行的程序，可执行的二进制代码；
+             2.进程的权限，进程的运行权限；
+             3.私有的线性地址空间，可以使用线性地址范围；
+             4.进程描述，包含操作该进程的一些必要的信息，比如进程的ID号；
+             5.一些已经获得的资源，比如打开的文件、管道等；
+ 
+ 创建进程的方法：
+        pid_tfork()         //创建成功时返回两次：父进程返回>0,子进程返回==0
+        int execl(const char  *path,  const char *arg,  ...)
+        int execlp(const  char  *file,  const char  *arg, ...)
+        int execle(const  char  *path,  const  char  *arg, ...,  char  *const  envp[]);
+        int execv(const char  *file,  char  *const  arg[]);
+        int execvp(const  char  *file,  char  *constargv[]);
+        int execvpe(const char  *file,  char  *const  argv[], char  *const  envp[]);
+        
+        FILE  *popen(const  char  *command, const char  *type); //可以获取命令的输出结果,建立一个管道
+        
+        int system(const  char  *command);//
+            
+ 
+ 
+ 
+ 
