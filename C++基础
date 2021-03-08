@@ -78,6 +78,39 @@ int main(){
 详细介绍：https://blog.csdn.net/zhaohong_bo/article/details/89552188
 
 
+##02 线程  API  使用场景
+线程：没有独立的地址空间，与进程以及其他线程共享一个地址空间，他是系统任务调度的最小单元
+进程：进程有独立的地址空间
+创建线程的案例：
+vioid* callback(void *param){
+  int high_addr = 0x123;
+  for (int i=0;i<loop;i++){
+     ++g_count;
+  }
+  int arrat[8192*254] = {0};
+  int low_addr =0x45678;
+  printf("id = %U, [%p, %p] = %d\n",)
+          syscall(_NR_gettid),
+	  &high_addr, &low_addr,
+	  (int)(&high_addr)-(int)(&low_addr));
+  sleep(100);
+}
+int main(){
+    pthread_t  thread[10] = {0};
+    for(int i=0;i<10;i++){
+       pthread_create(&thread[i],NULL,callback,NULL);
+     }
+     std::cout<<"result:"<<g_count<<std::endl;
+     sleep(100);
+     return 0;
+}
+linux:top； vmmap
+API函数：
+
+
+
+
+
 
 
 
